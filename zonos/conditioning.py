@@ -65,7 +65,7 @@ from phonemizer.backend import EspeakBackend
 from sudachipy import Dictionary, SplitMode
 
 if sys.platform == "darwin":
-    os.environ["PHONEMIZER_ESPEAK_LIBRARY"] = "/opt/homebrew/lib/libespeak-ng.dylib"
+    os.environ["PHONEMIZER_ESPEAK_LIBRARY"] = os.getenv("PHONEMIZER_ESPEAK_LIBRARY", "/opt/homebrew/lib/libespeak-ng.dylib")
 
 # --- Number normalization code from https://github.com/daniilrobnikov/vits2/blob/main/text/normalize_numbers.py ---
 

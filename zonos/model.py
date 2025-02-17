@@ -57,10 +57,10 @@ class Zonos(nn.Module):
 
     @classmethod
     def from_pretrained(
-        cls, repo_id: str, revision: str | None = None, device: str = DEFAULT_DEVICE, **kwargs
+        cls, repo_id: str, revision: str | None = None, device: str = DEFAULT_DEVICE, local_dir=None, **kwargs
     ) -> "Zonos":
-        config_path = hf_hub_download(repo_id=repo_id, filename="config.json", revision=revision)
-        model_path = hf_hub_download(repo_id=repo_id, filename="model.safetensors", revision=revision)
+        config_path = hf_hub_download(repo_id=repo_id, filename="config.json", revision=revision, local_dir=local_dir)
+        model_path = hf_hub_download(repo_id=repo_id, filename="model.safetensors", revision=revision, local_dir=local_dir)
         return cls.from_local(config_path, model_path, device, **kwargs)
 
     @classmethod
