@@ -386,15 +386,17 @@ class SpeakerEmbedding(nn.Module):
 
 
 class SpeakerEmbeddingLDA(nn.Module):
-    def __init__(self, device: str = DEFAULT_DEVICE):
+    def __init__(self, device: str = DEFAULT_DEVICE, local_dir: str = None):
         super().__init__()
         spk_model_path = hf_hub_download(
             repo_id="Zyphra/Zonos-v0.1-speaker-embedding",
             filename="ResNet293_SimAM_ASP_base.pt",
+            local_dir=local_dir,
         )
         lda_spk_model_path = hf_hub_download(
             repo_id="Zyphra/Zonos-v0.1-speaker-embedding",
             filename="ResNet293_SimAM_ASP_base_LDA-128.pt",
+            local_dir=local_dir,
         )
 
         self.device = device
