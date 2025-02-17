@@ -21,14 +21,14 @@ DEFAULT_BACKBONE_CLS = next(iter(BACKBONES.values()))
 
 
 class Zonos(nn.Module):
-    def __init__(self, config: ZonosConfig, backbone_cls=DEFAULT_BACKBONE_CLS):
+    def __init__(self, config: ZonosConfig, backbone_cls=DEFAULT_BACKBONE_CLS, dac_model_path="descript/dac_44khz"):
         super().__init__()
         self.config = config
         dim = config.backbone.d_model
         self.eos_token_id = config.eos_token_id
         self.masked_token_id = config.masked_token_id
 
-        self.autoencoder = DACAutoencoder()
+        self.autoencoder = DACAutoencoder(dac_model_path)
         self.backbone = backbone_cls(config.backbone)
         self.prefix_conditioner = PrefixConditioner(config.prefix_conditioner, dim)
         self.spk_clone_model = None
@@ -65,7 +65,7 @@ class Zonos(nn.Module):
 
     @classmethod
     def from_local(
-        cls, config_path: str, model_path: str, device: str = DEFAULT_DEVICE, backbone: str | None = None
+        cls, config_path: str, model_path: str, device: str = DEFAULT_DEVICE, backbone: str | None = None, dac_model_path="descript/dac_44khz", 
     ) -> "Zonos":
         config = ZonosConfig.from_dict(json.load(open(config_path)))
         if backbone:
@@ -77,7 +77,7 @@ class Zonos(nn.Module):
             if is_transformer and "torch" in BACKBONES:
                 backbone_cls = BACKBONES["torch"]
 
-        model = cls(config, backbone_cls).to(device, torch.bfloat16)
+        model = cls(config, backbone_cls, dac_model_path).to(device, torch.bfloat16)
         model.autoencoder.dac.to(device)
 
         sd = model.state_dict()
